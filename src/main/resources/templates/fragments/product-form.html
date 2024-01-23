@@ -21,7 +21,7 @@
         <button type="button" class="btn btn-sm btn-success" th:onclick="requestCosts()">Request Costs (Prototype)</button>
     </div>
 
-    <div class="mb-3" th:if="${history.size > 0}">
+    <div class="mb-3" th:if="${#lists.size(history) > 0}">
         <label class="form-label">Historic Prices</label>
         <div id="history" th:each="entry: ${history}">
             <span th:text="${#temporals.format(entry.date, 'dd.MM.yyyy')} + ' - CHF '"></span>

@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -53,7 +55,7 @@ public class MainController {
         Product item = productService.find(Product.class, id);
 
         if (item == null) return "redirect:/";
-        model.addAttribute("history", historyService.findByProduct(id));
+        model.addAttribute("history", historyService.findByProduct(id).collect(Collectors.toSet()));
         model.addAttribute("entry", item);
         return "edit";
     }
@@ -62,7 +64,7 @@ public class MainController {
     public String edit(@RequestParam UUID id, @ModelAttribute Product item,BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("entry", item);
-            model.addAttribute("history", historyService.findByProduct(id));
+            model.addAttribute("history", historyService.findByProduct(id).collect(Collectors.toSet()));
             return "edit";
         }
         productService.update(item);
