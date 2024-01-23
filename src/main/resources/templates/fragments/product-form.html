@@ -1,0 +1,118 @@
+<div th:fragment="product-form" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="mb-3">
+        <label class="form-label" th:for="*{title}">Title</label>
+        <input class="form-control" th:field="*{title}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label" th:for="*{description}">Description</label>
+        <input class="form-control" th:field="*{description}">
+    </div>
+    <hr>
+    <h4>Pricing</h4>
+    <div class="d-flex gap-2 align-items-end mb-3">
+        <div>
+            <label class="form-label">Fixed Costs</label>
+            <input id="fixed" class="form-control" type="text" placeholder="0.00" th:onchange="updatePriceSuggestion()">
+        </div>
+        <div>
+            <label class="form-label">Variable Costs</label>
+            <input id="variable" class="form-control" type="text" placeholder="0.00" th:onkeyup="updatePriceSuggestion()">
+        </div>
+        <button type="button" class="btn btn-sm btn-success" th:onclick="requestCosts()">Request Costs (Prototype)</button>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Historic Prices</label>
+        <div id="history" th:each="entry: ${history}">
+            <span th:text="${#temporals.format(entry.date, 'dd.MM.yyyy')} + ' - CHF '"></span>
+            <span class="price" th:text="${entry.price}"></span>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-end gap-2 mb-3">
+        <div>
+            <label class="form-label">Price customers are willing to pay (survey results)</label>
+            <input id="survey" class="form-control" type="text" placeholder="0.00" th:onkeyup="updatePriceSuggestion()">
+        </div>
+        <button type="button" class="btn btn-sm btn-success" th:onclick="requestSurvey()">Request Survey (Prototype)</button>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Objective</label>
+        <select id="objective" class="form-select" th:onchange="updatePriceSuggestion()">
+            <option value="0">Select Objective</option>
+            <option value="1">Increase Market Share</option>
+            <option value="2">Maximize Profit</option>
+        </select>
+    </div>
+
+    <div class="mb-3">Suggested Price: <span id="suggestion">CHF 0.00</span></div>
+
+    <div class="mb-3">
+        <label class="form-label" th:for="*{price}">Final Price</label>
+        <input class="form-control" th:field="*{price}">
+    </div>
+
+    <script th:inline="javascript">
+        var fixed = document.getElementById('fixed');
+        var variable = document.getElementById('variable');
+        var survey = document.getElementById('survey');
+        var objective = document.getElementById('objective');
+        var suggestion = document.getElementById('suggestion');
+
+        function updatePriceSuggestion() {
+            var p = 0.0;
+            var f = parseFloat(fixed.value);
+            var v = parseFloat(variable.value);
+            var s = parseFloat(survey.value);
+            var prices = document.querySelectorAll('.price');
+            var h = prices[prices.length-1].innerHTML;
+            var o = objective.value;
+
+            p += f;
+            p += v * 0.85;
+
+            if (survey.value != null && survey.value != "") {
+                if (p < s) {
+                    if (o == 1) {
+                        p += (s - p) / 4;
+                    } else if (o == 2) {
+                        p = s;
+                    } else {
+                        p += (s - p) / 2;
+                    }
+                }
+            } else {
+                if (p > h) {
+                    if (o == 1) {
+                        p = h;
+                    } else if(o == 2) {
+                        p -= (p - h) / 4;
+                    } else {
+                        p -= (p - h) / 2;
+                    }
+                }
+            }
+
+            if (p < f + v) {
+                p = f + v;
+            }
+            suggestion.innerHTML = "CHF " + Math.round(p * 100) / 100;
+        }
+
+        function requestCosts() {
+            fixed.value = randomPrice();
+            variable.value = randomPrice();
+            updatePriceSuggestion();
+        }
+
+        function requestSurvey() {
+            survey.value = parseFloat(randomPrice()) + 20;
+            updatePriceSuggestion();
+        }
+
+        function randomPrice() {
+            return Math.floor(Math.random() * 30) + "." + Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10);
+        }
+    </script>
+</div>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head :: head('Home')}">
+<body>
+<header th:replace="~{fragments/header :: header}"></header>
+<main class="container">
+    <div class="mb-4 d-flex gap-4 align-items-center">
+        <h2>Products</h2>
+        <a class="btn btn-sm btn-success" th:href="@{/create}">Create</a>
+    </div>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="entry : ${entries}">
+            <td th:text="${entry.title}"></td>
+            <td th:text="${entry.description}"></td>
+            <td th:text="${entry.price}"></td>
+            <td>
+                <a class="btn btn-sm btn-outline-primary" th:href="@{/history(id=${entry.id})}">History</a>
+            </td>
+            <td class="text-end">
+                <a class="btn btn-sm btn-warning" th:href="@{/edit(id=${entry.id})}">Edit</a>
+                <a class="btn btn-sm btn-danger" th:href="@{/delete(id=${entry.id})}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
