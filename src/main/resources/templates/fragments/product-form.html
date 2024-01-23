@@ -21,7 +21,7 @@
         <button type="button" class="btn btn-sm btn-success" th:onclick="requestCosts()">Request Costs (Prototype)</button>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3" th:if="${history.size > 0}">
         <label class="form-label">Historic Prices</label>
         <div id="history" th:each="entry: ${history}">
             <span th:text="${#temporals.format(entry.date, 'dd.MM.yyyy')} + ' - CHF '"></span>
@@ -65,9 +65,13 @@
             var f = parseFloat(fixed.value);
             var v = parseFloat(variable.value);
             var s = parseFloat(survey.value);
-            var prices = document.querySelectorAll('.price');
-            var h = prices[prices.length-1].innerHTML;
+            var h = 0.0;
             var o = objective.value;
+
+            var prices = document.querySelectorAll('.price');
+            if (prices.length > 0) {
+                h = prices[prices.length-1].innerHTML;
+            }
 
             p += f;
             p += v * 0.85;
