@@ -73,9 +73,11 @@
                 h = prices[prices.length-1].innerHTML;
             }
 
+            // calculate starting price to cover the costs.
             p += f;
             p += v * 0.85;
 
+            // use the survey results if available
             if (survey.value != null && survey.value != "") {
                 if (p < s) {
                     if (o == 1) {
@@ -86,6 +88,7 @@
                         p += (s - p) / 2;
                     }
                 }
+            // otherwise use the historic prices
             } else {
                 if (p > h) {
                     if (o == 1) {
