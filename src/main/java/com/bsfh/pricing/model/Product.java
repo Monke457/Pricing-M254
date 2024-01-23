@@ -1,5 +1,6 @@
 package com.bsfh.pricing.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -18,6 +19,8 @@ public class Product implements DBEntity {
     @Id
     @GeneratedValue
     private UUID id;
+
+    @Column(nullable = false)
     private String title;
     private String description;
     private BigDecimal price;
