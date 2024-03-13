@@ -20,6 +20,7 @@ public class HistoryService extends DBService<PriceHistory> {
         Root<PriceHistory> root = cq.from(PriceHistory.class);
 
         cq.where(cb.equal(root.get("product").get("id"), productId));
+        cq.orderBy(cb.desc(root.get("date")));
 
         return em.createQuery(cq).getResultStream();
     }
