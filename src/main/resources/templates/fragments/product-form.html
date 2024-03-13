@@ -67,15 +67,15 @@
             var s = parseFloat(survey.value);
             var h = 0.0;
             var o = objective.value;
+            var startingPrice = f + v * 0.85;
 
             var prices = document.querySelectorAll('.price');
             if (prices.length > 0) {
                 h = prices[prices.length-1].innerHTML;
             }
 
-            // calculate starting price to cover the costs.
-            p += f;
-            p += v * 0.85;
+            // use starting price to cover the costs.
+            p += startingPrice;
 
             // use the survey results if available
             if (survey.value != null && survey.value != "") {
@@ -101,9 +101,8 @@
                 }
             }
 
-            if (p < f + v) {
-                p = f + v;
-            }
+            if (p < startingPrice) p = startingPrice;
+
             suggestion.innerHTML = "CHF " + Math.round(p * 100) / 100;
         }
 
